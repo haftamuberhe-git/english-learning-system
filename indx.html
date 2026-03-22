@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Learning System</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --text: #0F172A;
+    --text2: #475569;
+    --blue: #2563EB;
+    --teal: #0F766E;
+    --amber: #D97706;
+    --border: #E2E8F0;
+    --blue-soft: #EFF6FF;
+    --teal-soft: #F0FDFA;
+    --amber-soft: #FFFBEB;
+    --green: #16A34A;
+    --red: #DC2626;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+    --shadow-md: 0 4px 24px rgba(0,0,0,.09);
+    --radius: 18px;
+    --radius-sm: 12px;
+    --radius-pill: 999px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  h1,h2,h3,h4,h5,h6 { font-family: 'Poppins', sans-serif; }
+
+  /* ── LAYOUT ── */
+  .app { display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 240px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    overflow-y: auto;
+    transition: transform .3s ease;
+  }
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo .brand {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .sidebar-logo .tagline {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .nav-section { padding: 16px 12px 8px; }
+  .nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: 0 8px;
+    margin-bottom: 6px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text2);
+    transition: all .18s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-item:hover { background: var(--bg); color: var(--text); }
+  .nav-item.active { background: var(--blue-soft); color: var(--blue); font-weight: 600; }
+  .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+  .sidebar-streak {
+    margin: auto 12px 16px;
+    background: linear-gradient(135deg, var(--amber-soft), #FEF3C7);
+    border: 1px solid #FDE68A;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .streak-flame { font-size: 22px; }
+  .streak-text { font-size: 12px; color: var(--amber); font-weight: 600; }
+  .streak-sub { font-size: 11px; color: #92400E; }
+
+  /* MAIN */
+  .main {
+    margin-left: 240px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-title { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 17px; flex: 1; }
+  .search-wrap { position: relative; }
+  .search-wrap input {
+    padding: 9px 16px 9px 38px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    width: 220px;
+    outline: none;
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .search-wrap input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+  .search-icon {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text2);
+    font-size: 14px;
+  }
+  .dark-toggle {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    transition: background .18s;
+  }
+  .dark-toggle:hover { background: var(--bg); }
+  .hamburger {
+    display: none;
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  /* PAGE CONTENT */
+  .page { display: none; padding: 36px 32px; max-width: 1200px; width: 100%; }
+  .page.active { display: block; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 24px;
+    transition: transform .18s, box-shadow .18s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+  /* TAGS/PILLS */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .02em;
+  }
+  .tag-blue { background: var(--blue-soft); color: var(--blue); }
+  .tag-teal { background: var(--teal-soft); color: var(--teal); }
+  .tag-amber { background: var(--amber-soft); color: var(--amber); }
+  .tag-green { background: #F0FDF4; color: var(--green); }
+  .tag-red { background: #FEF2F2; color: var(--red); }
+  .tag-slate { background: #F1F5F9; color: #475569; }
+
+  /* GRID HELPERS */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+
+  /* ───────────────────────────────── DASHBOARD ── */
+  .hero {
+    background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 60%, #0F766E 100%);
+    border-radius: var(--radius);
+    padding: 40px 40px 36px;
+    color: #fff;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.06);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 30%;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.04);
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.7);
+    margin-bottom: 10px;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .hero p {
+    font-size: 15px;
+    color: rgba(255,255,255,.8);
+    max-width: 520px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; position: relative; }
+  .btn-primary {
+    background: #fff;
+    color: var(--blue);
+    border: none;
+    padding: 11px 22px;
+    border-radius: var(--radius-pill);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+  .btn-ghost {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.3);
+    padding: 11px 22px;
+    border-radius: var(--radius-pill);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,.25); }
+
+  /* STAT CARDS */
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    box-shadow: var(--shadow);
+    transition: transform .18s;
+  }
+  .stat-card:hover { transform: translateY(-2px); }
+  .stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .stat-icon.blue { background: var(--blue-soft); }
+  .stat-icon.teal { background: var(--teal-soft); }
+  .stat-icon.amber { background: var(--amber-soft); }
+  .stat-num { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 700; line-height: 1; }
+  .stat-label { font-size: 13px; color: var(--text2); margin-top: 3px; }
+
+  /* SECTION HEADING */
+  .sec-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .sec-head h2 { font-size: 20px; font-weight: 700; }
+  .sec-head a { font-size: 13px; color: var(--blue); text-decoration: none; font-weight: 500; cursor: pointer; }
+  .sec-head a:hover { text-decoration: underline; }
+  .section-block { margin-bottom: 40px; }
+
+  /* FOCUS CARDS */
+  .focus-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+    transition: transform .18s, box-shadow .18s;
+    cursor: pointer;
+  }
+  .focus-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .focus-card .fc-icon { font-size: 26px; margin-bottom: 12px; }
+  .focus-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .focus-card p { font-size: 13px; color: var(--text2); line-height: 1.5; }
+  .focus-card .fc-footer { margin-top: 16px; display: flex; align-items: center; gap: 8px; }
+
+  /* CAT CARDS */
+  .cat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform .18s, box-shadow .18s;
+  }
+  .cat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .cat-icon-wrap {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .cat-card h3 { font-size: 15px; font-weight: 600; }
+  .cat-card p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  /* FEATURED EXPRESSIONS */
+  .expr-strip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+    margin-bottom: 10px;
+    transition: transform .18s;
+  }
+  .expr-strip:hover { transform: translateX(4px); }
+  .expr-main { font-weight: 600; font-size: 15px; }
+  .expr-meaning { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+  /* QUICK REVIEW */
+  .review-card {
+    background: linear-gradient(135deg, #1E3A8A, #2563EB);
+    border-radius: var(--radius);
+    padding: 28px 28px;
+    color: #fff;
+  }
+  .review-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .review-card p { font-size: 14px; color: rgba(255,255,255,.8); margin-bottom: 20px; }
+  .review-items { display: flex; flex-wrap: wrap; gap: 10px; }
+  .review-chip {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: var(--radius-pill);
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s;
+    color: #fff;
+  }
+  .review-chip:hover { background: rgba(255,255,255,.3); }
+
+  /* ───────────────── VOCABULARY PAGE ── */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+  .filter-chip {
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .filter-chip:hover { border-color: var(--blue); color: var(--blue); }
+  .filter-chip.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .filter-search {
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    background: var(--card);
+    color: var(--text);
+    margin-left: auto;
+    width: 180px;
+    transition: border-color .18s;
+  }
+  .filter-search:focus { border-color: var(--blue); }
+
+  .vocab-card .word { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .vocab-card .meaning { font-size: 14px; color: var(--text2); margin-bottom: 10px; }
+  .vocab-card .example { font-size: 13px; color: var(--text); background: var(--blue-soft); border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; font-style: italic; }
+  .vocab-card .card-foot { display: flex; align-items: center; justify-content: space-between; }
+  .fav-btn { background: none; border: none; cursor: pointer; font-size: 18px; color: #CBD5E1; transition: color .15s; }
+  .fav-btn:hover, .fav-btn.active { color: var(--amber); }
+
+  /* ────────────────── IDIOMS PAGE ── */
+  .idiom-card .phrase { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 6px; color: var(--teal); }
+  .idiom-card .meaning { font-size: 14px; color: var(--text2); margin-bottom: 10px; }
+  .idiom-card .example { font-size: 13px; font-style: italic; background: var(--teal-soft); border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; }
+
+  /* ─────────────── SENTENCES PAGE ── */
+  .pattern-card .structure {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--blue);
+    margin-bottom: 12px;
+    letter-spacing: .01em;
+  }
+  .pattern-card .usage { font-size: 13px; color: var(--text2); margin-bottom: 10px; }
+  .pattern-card .example-list { list-style: none; }
+  .pattern-card .example-list li { font-size: 14px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .pattern-card .example-list li:last-child { border-bottom: none; }
+  .pattern-card .example-list li::before { content: '→'; color: var(--blue); margin-right: 8px; }
+  .practice-prompt {
+    background: var(--amber-soft);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #92400E;
+  }
+  .practice-prompt strong { display: block; margin-bottom: 2px; }
+
+  /* ─────────────── CONVERSATIONS PAGE ── */
+  .convo-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+  .dialogue-line {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .dlg-speaker {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue);
+    background: var(--blue-soft);
+    border-radius: 6px;
+    padding: 2px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .dlg-speaker.b { color: var(--teal); background: var(--teal-soft); }
+  .dlg-text { font-size: 14px; color: var(--text); }
+  .speaking-tip {
+    background: var(--blue-soft);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--blue);
+  }
+  .speaking-tip strong { margin-right: 4px; }
+
+  /* ──────────────── PREFIXES PAGE ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 4px;
+    margin-bottom: 28px;
+    width: fit-content;
+  }
+  .tab-btn {
+    padding: 9px 22px;
+    border-radius: var(--radius-pill);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text2);
+    transition: all .18s;
+  }
+  .tab-btn.active { background: var(--card); color: var(--blue); box-shadow: var(--shadow); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .prefix-card h3 { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800; color: var(--blue); margin-bottom: 4px; }
+  .prefix-card .meaning-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .prefix-card .rule-note { font-size: 13px; color: var(--text2); margin-bottom: 12px; background: var(--bg); padding: 8px 12px; border-radius: 8px; }
+  .prefix-examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .prefix-example-pill {
+    background: var(--blue-soft);
+    color: var(--blue);
+    border-radius: var(--radius-pill);
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .suffix-card h3 { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800; color: var(--teal); margin-bottom: 4px; }
+  .suffix-examples .suffix-pill {
+    background: var(--teal-soft);
+    color: var(--teal);
+    border-radius: var(--radius-pill);
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .eg-sentence { font-size: 14px; padding: 10px 14px; border-left: 3px solid var(--blue); background: var(--blue-soft); border-radius: 0 10px 10px 0; margin-bottom: 8px; }
+  .eg-sentence .highlighted { font-weight: 700; color: var(--blue); }
+  .eg-group-title { font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin: 20px 0 10px; }
+
+  /* ──────────────── REVIEW PAGE ── */
+  .accordion { margin-bottom: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+  .accordion-head {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--card);
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    text-align: left;
+    transition: background .15s;
+  }
+  .accordion-head:hover { background: var(--bg); }
+  .accordion-arrow { transition: transform .25s; font-size: 14px; color: var(--text2); }
+  .accordion.open .accordion-arrow { transform: rotate(180deg); }
+  .accordion-body { display: none; padding: 0 20px 18px; background: var(--card); }
+  .accordion.open .accordion-body { display: block; }
+  .mistake-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .mistake-row:last-child { border-bottom: none; }
+  .mistake-wrong { font-size: 13px; color: var(--red); text-decoration: line-through; font-weight: 500; min-width: 130px; }
+  .mistake-right { font-size: 13px; color: var(--green); font-weight: 600; }
+  .flash-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform .18s;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .flash-card:hover { transform: scale(1.02); }
+  .flash-card .flash-q { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .flash-card .flash-a { font-size: 13px; color: var(--text2); display: none; }
+  .flash-card.revealed .flash-a { display: block; }
+  .flash-card.revealed .flash-q { color: var(--blue); }
+  .flash-hint { font-size: 11px; color: var(--text2); margin-top: 10px; }
+
+  /* PAGE TITLE BLOCK */
+  .page-title-block { margin-bottom: 32px; }
+  .page-title-block h1 { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
+  .page-title-block p { font-size: 15px; color: var(--text2); }
+
+  /* FOOTER */
+  footer {
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 28px 32px;
+    margin-left: 240px;
+  }
+  .footer-inner { max-width: 1200px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; }
+  .footer-brand { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; }
+  .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+  .footer-links a { font-size: 13px; color: var(--text2); text-decoration: none; cursor: pointer; }
+  .footer-links a:hover { color: var(--blue); }
+
+  /* MOBILE BOTTOM NAV */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 8px 0 12px;
+    z-index: 200;
+  }
+  .mobile-nav-inner { display: flex; justify-content: space-around; }
+  .mob-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 10px;
+    color: var(--text2);
+    font-weight: 500;
+    border: none;
+    background: none;
+    transition: color .15s;
+  }
+  .mob-nav-item .mob-icon { font-size: 20px; }
+  .mob-nav-item.active { color: var(--blue); }
+
+  /* DARK MODE */
+  body.dark {
+    --bg: #0F172A;
+    --card: #1E293B;
+    --text: #F1F5F9;
+    --text2: #94A3B8;
+    --border: #334155;
+    --blue-soft: #1E3A8A;
+    --teal-soft: #134E4A;
+    --amber-soft: #451A03;
+  }
+  body.dark .sidebar { background: var(--card); }
+  body.dark .topbar { background: var(--card); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    footer { margin-left: 0; }
+    .hamburger { display: flex; }
+    .page { padding: 24px 18px; }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .hero h1 { font-size: 26px; }
+    .hero { padding: 28px 24px; }
+    .mobile-nav { display: block; }
+    .main { padding-bottom: 70px; }
+  }
+  @media (max-width: 600px) {
+    .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    .grid-auto { grid-template-columns: 1fr; }
+    .tabs { width: 100%; }
+    .tab-btn { flex: 1; text-align: center; padding: 9px 10px; font-size: 13px; }
+    .topbar { padding: 12px 16px; }
+    .search-wrap { display: none; }
+  }
+
+  /* OVERLAY for mobile sidebar */
+  .overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.4);
+    z-index: 90;
+  }
+  .overlay.open { display: block; }
+
+  .sentence-card .sent { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .sentence-card .sent:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand">English Learning<br>System</div>
+      <div class="tagline">Vocabulary · Expressions · Word Patterns</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Main</div>
+      <button class="nav-item active" onclick="showPage('dashboard', this)">
+        <span class="nav-icon">🏠</span> Dashboard
+      </button>
+      <button class="nav-item" onclick="showPage('vocabulary', this)">
+        <span class="nav-icon">📖</span> Vocabulary
+      </button>
+      <button class="nav-item" onclick="showPage('idioms', this)">
+        <span class="nav-icon">💬</span> Idioms & Expressions
+      </button>
+      <button class="nav-item" onclick="showPage('sentences', this)">
+        <span class="nav-icon">✍️</span> Sentences & Writing
+      </button>
+      <button class="nav-item" onclick="showPage('conversations', this)">
+        <span class="nav-icon">🗣️</span> Conversations
+      </button>
+      <button class="nav-item" onclick="showPage('prefixes', this)">
+        <span class="nav-icon">🔬</span> Prefixes & Suffixes
+      </button>
+      <button class="nav-item" onclick="showPage('review', this)">
+        <span class="nav-icon">⚡</span> Review Hub
+      </button>
+    </div>
+    <div class="sidebar-streak">
+      <span class="streak-flame">🔥</span>
+      <div>
+        <div class="streak-text">7-Day Streak</div>
+        <div class="streak-sub">Keep it going!</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <button class="hamburger" id="hamburger" onclick="openSidebar()">☰</button>
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search words, idioms…" id="globalSearch" oninput="handleGlobalSearch(this.value)">
+      </div>
+      <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
+    </div>
+
+    <!-- ══════════════════════ DASHBOARD ══ -->
+    <div class="page active" id="page-dashboard">
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-eyebrow">Welcome back</div>
+        <h1>Your English Learning<br>Dashboard</h1>
+        <p>Study vocabulary, expressions, sentence patterns, and word-building systems — all in one focused place.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('vocabulary', null)">Start Learning</button>
+          <button class="btn-ghost" onclick="showPage('review', null)">Quick Review</button>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="section-block">
+        <div class="grid-3">
+          <div class="stat-card">
+            <div class="stat-icon blue">📖</div>
+            <div>
+              <div class="stat-num">42</div>
+              <div class="stat-label">Vocabulary words</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon teal">💬</div>
+            <div>
+              <div class="stat-num">60+</div>
+              <div class="stat-label">Idioms & Expressions</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber">🔬</div>
+            <div>
+              <div class="stat-num">27</div>
+              <div class="stat-label">Prefixes & Suffixes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TODAY'S FOCUS -->
+      <div class="section-block">
+        <div class="sec-head">
+          <h2>Today's Focus</h2>
+        </div>
+        <div class="grid-3">
+          <div class="focus-card" onclick="showPage('vocabulary', null)">
+            <div class="fc-icon">📖</div>
+            <h3>Word of the Day</h3>
+            <p><strong>Omniscient</strong> — knowing everything. Used in describing powerful or all-seeing figures.</p>
+            <div class="fc-footer"><span class="tag tag-blue">Vocabulary</span></div>
+          </div>
+          <div class="focus-card" onclick="showPage('idioms', null)">
+            <div class="fc-icon">💡</div>
+            <h3>Expression of the Day</h3>
+            <p><strong>"It takes guts"</strong> — It requires courage. <em>It takes guts to speak in public.</em></p>
+            <div class="fc-footer"><span class="tag tag-teal">Expression</span></div>
+          </div>
+          <div class="focus-card" onclick="showPage('prefixes', null)">
+            <div class="fc-icon">🔬</div>
+            <h3>Prefix of the Day</h3>
+            <p><strong>mis-</strong> means wrongly. Examples: misunderstand, misbehave, misspell.</p>
+            <div class="fc-footer"><span class="tag tag-amber">Word Building</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPLORE BY CATEGORY -->
+      <div class="section-block">
+        <div class="sec-head"><h2>Explore by Category</h2></div>
+        <div class="grid-2">
+          <div class="cat-card" onclick="showPage('vocabulary', null)">
+            <div class="cat-icon-wrap" style="background:var(--blue-soft)">📖</div>
+            <div>
+              <h3>Vocabulary</h3>
+              <p>42 words with meanings and examples</p>
+            </div>
+          </div>
+          <div class="cat-card" onclick="showPage('idioms', null)">
+            <div class="cat-icon-wrap" style="background:var(--teal-soft)">💬</div>
+            <div>
+              <h3>Idioms & Expressions</h3>
+              <p>60+ everyday phrases explained</p>
+            </div>
+          </div>
+          <div class="cat-card" onclick="showPage('sentences', null)">
+            <div class="cat-icon-wrap" style="background:var(--amber-soft)">✍️</div>
+            <div>
+              <h3>Sentences & Writing</h3>
+              <p>Patterns, phrase building, real examples</p>
+            </div>
+          </div>
+          <div class="cat-card" onclick="showPage('conversations', null)">
+            <div class="cat-icon-wrap" style="background:#F0FDF4">🗣️</div>
+            <div>
+              <h3>Daily Conversations</h3>
+              <p>Real dialogues for everyday situations</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORD BUILDING LAB -->
+      <div class="section-block">
+        <div class="sec-head">
+          <h2>Word Building Lab</h2>
+          <a onclick="showPage('prefixes', null)">Explore all →</a>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--teal-soft),#CCFBF1);border:1px solid #99F6E4;border-radius:var(--radius);padding:24px 28px;">
+          <p style="font-size:14px;color:var(--teal);font-weight:600;margin-bottom:14px;">Common Prefix Patterns</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+            <span class="tag tag-teal">dis- → disagree</span>
+            <span class="tag tag-teal">un- → unhappy</span>
+            <span class="tag tag-teal">mis- → misunderstand</span>
+            <span class="tag tag-teal">anti- → antisocial</span>
+            <span class="tag tag-teal">pre- → preview</span>
+            <span class="tag tag-teal">re- → rewrite</span>
+            <span class="tag tag-teal">dys- → dyslexia</span>
+          </div>
+          <button class="btn-primary" style="background:var(--teal);color:#fff;" onclick="showPage('prefixes', null)">Open Word Building Lab</button>
+        </div>
+      </div>
+
+      <!-- SENTENCE PRACTICE -->
+      <div class="section-block">
+        <div class="sec-head">
+          <h2>Sentence Practice</h2>
+          <a onclick="showPage('sentences', null)">See all →</a>
+        </div>
+        <div class="grid-auto">
+          <div class="card">
+            <div style="font-family:'JetBrains Mono','Courier New',monospace;font-size:14px;font-weight:700;color:var(--blue);background:var(--blue-soft);padding:10px 14px;border-radius:8px;margin-bottom:12px;">As long as + condition</div>
+            <div style="font-size:14px;color:var(--text2);">As long as I study, I will improve.</div>
+          </div>
+          <div class="card">
+            <div style="font-family:'JetBrains Mono','Courier New',monospace;font-size:14px;font-weight:700;color:var(--blue);background:var(--blue-soft);padding:10px 14px;border-radius:8px;margin-bottom:12px;">I've run out of + noun</div>
+            <div style="font-size:14px;color:var(--text2);">I've run out of time.</div>
+          </div>
+          <div class="card">
+            <div style="font-family:'JetBrains Mono','Courier New',monospace;font-size:14px;font-weight:700;color:var(--blue);background:var(--blue-soft);padding:10px 14px;border-radius:8px;margin-bottom:12px;">On the verge of + noun/verb-ing</div>
+            <div style="font-size:14px;color:var(--text2);">She is on the verge of crying.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURED EXPRESSIONS -->
+      <div class="section-block">
+        <div class="sec-head">
+          <h2>Featured Expressions</h2>
+          <a onclick="showPage('idioms', null)">See all →</a>
+        </div>
+        <div class="expr-strip"><div><div class="expr-main">Easier said than done</div><div class="expr-meaning">Hard to actually do in practice</div></div><span class="tag tag-teal">daily life</span></div>
+        <div class="expr-strip"><div><div class="expr-main">Once in a blue moon</div><div class="expr-meaning">Very rarely</div></div><span class="tag tag-slate">time</span></div>
+        <div class="expr-strip"><div><div class="expr-main">Mark my words</div><div class="expr-meaning">Remember what I'm saying — it will happen</div></div><span class="tag tag-amber">emphasis</span></div>
+        <div class="expr-strip"><div><div class="expr-main">I told you so</div><div class="expr-meaning">Said after being proven right</div></div><span class="tag tag-slate">reaction</span></div>
+      </div>
+
+      <!-- QUICK REVIEW -->
+      <div class="section-block">
+        <div class="review-card">
+          <h2>Quick Review</h2>
+          <p>Jump into a fast 5-minute study session across any category.</p>
+          <div class="review-items">
+            <span class="review-chip" onclick="showPage('vocabulary', null)">📖 Vocabulary</span>
+            <span class="review-chip" onclick="showPage('idioms', null)">💬 Expressions</span>
+            <span class="review-chip" onclick="showPage('prefixes', null)">🔬 Prefixes</span>
+            <span class="review-chip" onclick="showPage('sentences', null)">✍️ Patterns</span>
+            <span class="review-chip" onclick="showPage('review', null)">⚡ Review Hub</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.page-dashboard -->
+
+    <!-- ══════════════════════ VOCABULARY ══ -->
+    <div class="page" id="page-vocabulary">
+      <div class="page-title-block">
+        <h1>Vocabulary</h1>
+        <p>Learn words with meanings, examples, and usage tags.</p>
+      </div>
+      <div class="filter-bar" id="vocab-filters">
+        <button class="filter-chip active" onclick="filterVocab('all', this)">All</button>
+        <button class="filter-chip" onclick="filterVocab('describing', this)">Describing</button>
+        <button class="filter-chip" onclick="filterVocab('daily', this)">Daily</button>
+        <button class="filter-chip" onclick="filterVocab('formal', this)">Formal</button>
+        <button class="filter-chip" onclick="filterVocab('travel', this)">Travel</button>
+        <input class="filter-search" type="text" placeholder="Search vocabulary…" oninput="searchVocab(this.value)">
+      </div>
+      <div class="grid-auto" id="vocab-grid"></div>
+    </div>
+
+    <!-- ══════════════════════ IDIOMS ══ -->
+    <div class="page" id="page-idioms">
+      <div class="page-title-block">
+        <h1>Idioms & Expressions</h1>
+        <p>Real-world phrases, idioms, and expressions with meanings and examples.</p>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-chip active" onclick="filterIdioms('all', this)">All</button>
+        <button class="filter-chip" onclick="filterIdioms('emotion', this)">Emotion</button>
+        <button class="filter-chip" onclick="filterIdioms('daily', this)">Daily Life</button>
+        <button class="filter-chip" onclick="filterIdioms('conflict', this)">Conflict</button>
+        <button class="filter-chip" onclick="filterIdioms('travel', this)">Travel</button>
+        <button class="filter-chip" onclick="filterIdioms('reaction', this)">Reaction</button>
+        <input class="filter-search" type="text" placeholder="Search expressions…" oninput="searchIdioms(this.value)">
+      </div>
+      <div class="grid-auto" id="idioms-grid"></div>
+    </div>
+
+    <!-- ══════════════════════ SENTENCES ══ -->
+    <div class="page" id="page-sentences">
+      <div class="page-title-block">
+        <h1>Sentences & Writing</h1>
+        <p>Sentence patterns, phrase building, and real writing examples.</p>
+      </div>
+      <div class="section-block">
+        <div class="sec-head"><h2>Sentence Patterns</h2></div>
+        <div class="grid-auto" id="patterns-grid"></div>
+      </div>
+      <div class="section-block">
+        <div class="sec-head"><h2>Phrase Building</h2></div>
+        <div class="grid-auto" id="phrases-grid"></div>
+      </div>
+      <div class="section-block">
+        <div class="sec-head"><h2>Real Writing Examples</h2></div>
+        <div class="card sentence-card" id="sentences-list"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ CONVERSATIONS ══ -->
+    <div class="page" id="page-conversations">
+      <div class="page-title-block">
+        <h1>Daily Conversations</h1>
+        <p>Real dialogues, Q&A, and role-play scenarios for everyday situations.</p>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-chip active" onclick="filterConvo('all', this)">All</button>
+        <button class="filter-chip" onclick="filterConvo('phone', this)">Phone</button>
+        <button class="filter-chip" onclick="filterConvo('travel', this)">Travel</button>
+        <button class="filter-chip" onclick="filterConvo('haircut', this)">Haircut</button>
+        <button class="filter-chip" onclick="filterConvo('restaurant', this)">Restaurant</button>
+        <button class="filter-chip" onclick="filterConvo('questions', this)">Q&A</button>
+      </div>
+      <div class="grid-auto" id="convo-grid"></div>
+    </div>
+
+    <!-- ══════════════════════ PREFIXES & SUFFIXES ══ -->
+    <div class="page" id="page-prefixes">
+      <div class="page-title-block">
+        <h1>Prefixes & Suffixes</h1>
+        <p>A word-building lab — learn how to form new words using root patterns.</p>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('prefixes-tab', this)">Prefixes</button>
+        <button class="tab-btn" onclick="switchTab('suffixes-tab', this)">Suffixes</button>
+        <button class="tab-btn" onclick="switchTab('examples-tab', this)">Example Sentences</button>
+      </div>
+
+      <!-- PREFIXES TAB -->
+      <div class="tab-content active" id="prefixes-tab">
+        <div class="grid-auto" id="prefixes-grid"></div>
+      </div>
+
+      <!-- SUFFIXES TAB -->
+      <div class="tab-content" id="suffixes-tab">
+        <div class="grid-auto" id="suffixes-grid"></div>
+      </div>
+
+      <!-- EXAMPLES TAB -->
+      <div class="tab-content" id="examples-tab">
+        <div id="examples-content"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ REVIEW HUB ══ -->
+    <div class="page" id="page-review">
+      <div class="page-title-block">
+        <h1>Review Hub</h1>
+        <p>Fast-track revision — grammar, vocabulary, mistakes, and flash review.</p>
+      </div>
+
+      <!-- FLASH CARDS -->
+      <div class="section-block">
+        <div class="sec-head"><h2>Flash Review</h2></div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Click a card to reveal the answer.</p>
+        <div class="grid-3" id="flash-grid"></div>
+      </div>
+
+      <!-- GRAMMAR SUMMARY -->
+      <div class="section-block">
+        <div class="sec-head"><h2>Grammar Summary</h2></div>
+        <div class="accordion open" id="acc1">
+          <button class="accordion-head" onclick="toggleAcc('acc1')">
+            Tense Structure Quick Reference <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-body">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding-top:8px;">
+              <div class="card" style="padding:14px 16px;">
+                <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;">PRESENT SIMPLE</div>
+                <div style="font-size:13px;">Subject + verb(s)</div>
+                <div style="font-size:12px;color:var(--blue);margin-top:4px;font-style:italic;">I study every day.</div>
+              </div>
+              <div class="card" style="padding:14px 16px;">
+                <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;">PRESENT PERFECT</div>
+                <div style="font-size:13px;">have/has + past participle</div>
+                <div style="font-size:12px;color:var(--blue);margin-top:4px;font-style:italic;">I have studied for a year.</div>
+              </div>
+              <div class="card" style="padding:14px 16px;">
+                <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;">GOING TO</div>
+                <div style="font-size:13px;">am/is/are going to + verb</div>
+                <div style="font-size:12px;color:var(--blue);margin-top:4px;font-style:italic;">I am going to start my journey.</div>
+              </div>
+              <div class="card" style="padding:14px 16px;">
+                <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;">MUST HAVE</div>
+                <div style="font-size:13px;">must have + past participle</div>
+                <div style="font-size:12px;color:var(--blue);margin-top:4px;font-style:italic;">They must have left already.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COMMON MISTAKES -->
+        <div class="accordion" id="acc2">
+          <button class="accordion-head" onclick="toggleAcc('acc2')">
+            Common Mistakes to Avoid <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-body">
+            <div style="padding-top:8px;">
+              <div class="mistake-row"><span class="mistake-wrong">Have you cut yet?</span><span class="mistake-right">Have you had a haircut yet?</span></div>
+              <div class="mistake-row"><span class="mistake-wrong">I am out of vouchers</span><span class="mistake-right">I've run out of vouchers</span></div>
+              <div class="mistake-row"><span class="mistake-wrong">Bite you back one time</span><span class="mistake-right">It'll bite you back</span></div>
+              <div class="mistake-row"><span class="mistake-wrong">I couldn't agree less</span><span class="mistake-right">I couldn't agree more</span></div>
+              <div class="mistake-row"><span class="mistake-wrong">Same old same old (without comma)</span><span class="mistake-right">Same old, same old</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VOCAB SUMMARY -->
+        <div class="accordion" id="acc3">
+          <button class="accordion-head" onclick="toggleAcc('acc3')">
+            Vocabulary Quick Summary <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-body">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:12px;">
+              <span class="tag tag-blue">omniscient = all-knowing</span>
+              <span class="tag tag-blue">omnipotent = all-powerful</span>
+              <span class="tag tag-teal">voucher = coupon/credit</span>
+              <span class="tag tag-teal">verge = edge / close to</span>
+              <span class="tag tag-amber">gloomy = dark / depressing</span>
+              <span class="tag tag-amber">slippery = unsafe to walk on</span>
+              <span class="tag tag-slate">obedient = follows rules</span>
+              <span class="tag tag-slate">generous = gives easily</span>
+              <span class="tag tag-blue">stubborn = won't change</span>
+              <span class="tag tag-teal">gossip = unofficial talk about others</span>
+              <span class="tag tag-teal">deflate = lose air or pressure</span>
+              <span class="tag tag-amber">worthless = no value</span>
+              <span class="tag tag-slate">overcast = cloudy sky</span>
+              <span class="tag tag-blue">grudge = long-lasting anger</span>
+              <span class="tag tag-teal">taboo = socially forbidden</span>
+              <span class="tag tag-amber">sacred = holy</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PREFIX CHEAT SHEET -->
+        <div class="accordion" id="acc4">
+          <button class="accordion-head" onclick="toggleAcc('acc4')">
+            Prefix Cheat Sheet <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-body">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;padding-top:10px;">
+              <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><strong style="color:var(--blue);">dis-</strong><br><span style="font-size:12px;color:var(--text2);">opposite → disagree</span></div>
+              <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><strong style="color:var(--blue);">un-</strong><br><span style="font-size:12px;color:var(--text2);">negative → unhappy</span></div>
+              <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><strong style="color:var(--blue);">mis-</strong><br><span style="font-size:12px;color:var(--text2);">wrongly → misspell</span></div>
+              <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><strong style="color:var(--blue);">anti-</strong><br><span style="font-size:12px;color:var(--text2);">against → antiwar</span></div>
+              <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><strong style="color:var(--blue);">re-</strong><br><span style="font-size:12px;color:var(--text2);">again → rewrite</span></div>
+              <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><strong style="color:var(--blue);">pre-</strong><br><span style="font-size:12px;color:var(--text2);">before → preview</span></div>
+              <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><strong style="color:var(--blue);">dys-</strong><br><span style="font-size:12px;color:var(--text2);">problem → dyslexia</span></div>
+              <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><strong style="color:var(--blue);">non-</strong><br><span style="font-size:12px;color:var(--text2);">neutral not → non-smoker</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUDY IN 5 MINUTES -->
+      <div class="section-block">
+        <div class="review-card">
+          <h2>Study in 5 Minutes</h2>
+          <p>Pick one category and review 5 key items right now.</p>
+          <div class="review-items">
+            <span class="review-chip" onclick="showPage('vocabulary', null)">Top Vocabulary</span>
+            <span class="review-chip" onclick="showPage('idioms', null)">Key Expressions</span>
+            <span class="review-chip" onclick="showPage('prefixes', null)">Prefix Patterns</span>
+            <span class="review-chip" onclick="showPage('sentences', null)">Sentence Patterns</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.page-review -->
+
+  </div><!-- /.main -->
+</div><!-- /.app -->
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">English Learning System</div>
+    <div class="footer-links">
+      <a onclick="showPage('vocabulary', null)">Vocabulary</a>
+      <a onclick="showPage('idioms', null)">Expressions</a>
+      <a onclick="showPage('sentences', null)">Sentences</a>
+      <a onclick="showPage('conversations', null)">Conversations</a>
+      <a onclick="showPage('prefixes', null)">Prefixes & Suffixes</a>
+      <a onclick="showPage('review', null)">Review Hub</a>
+    </div>
+  </div>
+</footer>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mob-nav-item active" onclick="showPage('dashboard', this)" id="mob-dashboard">
+      <span class="mob-icon">🏠</span>Home
+    </button>
+    <button class="mob-nav-item" onclick="showPage('vocabulary', this)" id="mob-vocabulary">
+      <span class="mob-icon">📖</span>Words
+    </button>
+    <button class="mob-nav-item" onclick="showPage('idioms', this)" id="mob-idioms">
+      <span class="mob-icon">💬</span>Idioms
+    </button>
+    <button class="mob-nav-item" onclick="showPage('prefixes', this)" id="mob-prefixes">
+      <span class="mob-icon">🔬</span>Prefixes
+    </button>
+    <button class="mob-nav-item" onclick="showPage('review', this)" id="mob-review">
+      <span class="mob-icon">⚡</span>Review
+    </button>
+  </div>
+</nav>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const VOCAB = [
+  { word: 'Omniscient', meaning: 'Knowing everything', example: null, tag: 'formal' },
+  { word: 'Omnipotent', meaning: 'All-powerful', example: null, tag: 'formal' },
+  { word: 'Sacred', meaning: 'Holy; connected to religion or God', example: null, tag: 'formal' },
+  { word: 'Praise', meaning: 'Express strong approval or admiration', example: null, tag: 'daily' },
+  { word: 'Worship', meaning: 'Show devotion and reverence', example: null, tag: 'formal' },
+  { word: 'Uneven', meaning: 'Not flat or smooth', example: 'The ground is uneven.', tag: 'describing' },
+  { word: 'Deflate', meaning: 'Lose air or pressure; become less confident', example: 'The ball is deflating.', tag: 'daily' },
+  { word: 'Gossip', meaning: 'Unofficial talk or rumours about others', example: "It's just gossip.", tag: 'daily' },
+  { word: 'Voucher', meaning: 'A coupon, token, or credit', example: 'I used a voucher.', tag: 'daily' },
+  { word: 'Verge', meaning: 'Edge or the point just before something happens', example: 'On the verge of success.', tag: 'daily' },
+  { word: 'Untidy', meaning: 'Not neat or organised', example: 'His room is untidy.', tag: 'describing' },
+  { word: 'Disorganized', meaning: 'Not arranged or planned properly', example: 'She is very disorganized.', tag: 'describing' },
+  { word: 'Grab', meaning: 'Take something quickly', example: 'He grabbed his wallet.', tag: 'daily' },
+  { word: 'Fare', meaning: 'The cost of travelling on public transport', example: null, tag: 'travel' },
+  { word: 'Overloaded', meaning: 'Carrying or containing too much', example: null, tag: 'describing' },
+  { word: 'Nearby', meaning: 'At a short distance; close', example: null, tag: 'travel' },
+  { word: 'Rude', meaning: 'Not polite; offensive in manner', example: null, tag: 'describing' },
+  { word: 'Stubborn', meaning: 'Refusing to change opinion or behaviour', example: null, tag: 'describing' },
+  { word: 'Taboo', meaning: 'Socially or culturally forbidden', example: "It's taboo to talk about that.", tag: 'formal' },
+  { word: 'Grudge', meaning: 'Long-lasting anger towards someone', example: "I don't hold grudges.", tag: 'daily' },
+  { word: 'Overcast', meaning: 'Cloudy sky with no sun visible', example: 'The sky is overcast today.', tag: 'describing' },
+  { word: 'Gloomy', meaning: 'Dark, depressing, or pessimistic', example: null, tag: 'describing' },
+  { word: 'Slippery', meaning: 'Not safe to walk or hold — surfaces slide', example: null, tag: 'describing' },
+  { word: 'Scatter', meaning: 'Spread in different directions', example: null, tag: 'describing' },
+  { word: 'Worthless', meaning: 'Having no value or use', example: null, tag: 'describing' },
+  { word: 'Obedient', meaning: 'Follows rules and instructions', example: null, tag: 'describing' },
+  { word: 'Generous', meaning: 'Gives freely and willingly', example: null, tag: 'describing' },
+  { word: 'Modest', meaning: 'Not expensive or showy; simple', example: null, tag: 'formal' },
+  { word: 'Precious', meaning: 'Very valuable or important', example: null, tag: 'daily' },
+  { word: 'Cottage', meaning: 'A small house, usually in the countryside', example: null, tag: 'travel' },
+  { word: 'Casual worker', meaning: 'A temporary or part-time employee', example: null, tag: 'formal' },
+];
+
+const IDIOMS = [
+  { phrase: "Don't bite the hand that feeds you", meaning: "Don't harm someone who helps you", example: "He shouldn't complain — don't bite the hand that feeds you.", tag: 'advice' },
+  { phrase: "Every dog has his day", meaning: "Everyone gets a chance to succeed eventually", example: "Don't worry, every dog has his day.", tag: 'advice' },
+  { phrase: "Talk to the hand", meaning: "I'm not listening to you", example: "Talk to the hand, I'm done.", tag: 'conflict' },
+  { phrase: "Water under the bridge", meaning: "Something in the past that no longer matters", example: "It's all water under the bridge now.", tag: 'daily' },
+  { phrase: "Spill the beans", meaning: "Reveal a secret", example: "Come on, spill the beans.", tag: 'daily' },
+  { phrase: "Throw someone under the bus", meaning: "Betray someone to save yourself", example: "He threw his teammate under the bus.", tag: 'conflict' },
+  { phrase: "Break a leg", meaning: "Good luck", example: "Break a leg in your interview.", tag: 'daily' },
+  { phrase: "Caught red-handed", meaning: "Caught in the act of doing something wrong", example: "He was caught red-handed.", tag: 'conflict' },
+  { phrase: "Same old, same old", meaning: "Nothing new or different", example: "Work is the same old, same old.", tag: 'daily' },
+  { phrase: "Cut it out", meaning: "Stop doing something annoying", example: "Cut it out! That's annoying.", tag: 'conflict' },
+  { phrase: "It takes guts", meaning: "It requires courage", example: "It takes guts to speak in public.", tag: 'emotion' },
+  { phrase: "Over my dead body", meaning: "I will never allow it", example: "You'll do that over my dead body.", tag: 'conflict' },
+  { phrase: "I'm gutted", meaning: "I feel very disappointed", example: "I'm gutted I missed the opportunity.", tag: 'emotion' },
+  { phrase: "I couldn't care less", meaning: "I don't care at all", example: "I couldn't care less about that.", tag: 'emotion' },
+  { phrase: "Let me sleep on it", meaning: "I'll decide later after thinking it over", example: "Let me sleep on it.", tag: 'daily' },
+  { phrase: "Give it a shot", meaning: "Try it", example: "Give it a shot.", tag: 'daily' },
+  { phrase: "Don't embarrass me", meaning: "Don't make me feel ashamed in public", example: "Don't embarrass me in public.", tag: 'conflict' },
+  { phrase: "Don't start with me", meaning: "Don't argue with me right now", example: "Don't start with me today.", tag: 'conflict' },
+  { phrase: "How dare you", meaning: "Expressing shock at someone's disrespect", example: "How dare you speak like that.", tag: 'conflict' },
+  { phrase: "Get out of my face", meaning: "Go away; leave me alone", example: "Get out of my face.", tag: 'conflict' },
+  { phrase: "It's not rocket science", meaning: "It's not difficult", example: "It's not rocket science.", tag: 'daily' },
+  { phrase: "Easier said than done", meaning: "Hard to actually do in practice", example: "Losing weight is easier said than done.", tag: 'advice' },
+  { phrase: "Once in a blue moon", meaning: "Very rarely", example: "I go out once in a blue moon.", tag: 'daily' },
+  { phrase: "It slipped my mind", meaning: "I forgot", example: "Sorry, it slipped my mind.", tag: 'daily' },
+  { phrase: "I told you so", meaning: "Said after being proven right", example: "See? I told you so.", tag: 'reaction' },
+  { phrase: "Mark my words", meaning: "Remember what I say — it will come true", example: "Mark my words, he'll regret it.", tag: 'reaction' },
+  { phrase: "If you say so", meaning: "I'll accept that, but I'm not sure I agree", example: "If you say so.", tag: 'reaction' },
+  { phrase: "Have a blast", meaning: "Have a great time", example: "We had a blast at the party.", tag: 'daily' },
+  { phrase: "I have bigger fish to fry", meaning: "I have more important things to deal with", example: "I have bigger fish to fry.", tag: 'daily' },
+  { phrase: "On top of that", meaning: "In addition to that", example: "On top of that, it was raining.", tag: 'daily' },
+  { phrase: "I bet…", meaning: "I'm sure / I think", example: "I bet he's tired.", tag: 'daily' },
+  { phrase: "Let's make a fresh start", meaning: "Start over, forget the past", example: "Let's forget the past and make a fresh start.", tag: 'advice' },
+  { phrase: "I'm bored to death", meaning: "Extremely bored", example: "I'm bored to death.", tag: 'emotion' },
+  { phrase: "It's a rip-off", meaning: "Too expensive; unfair price", example: "That shop is a rip-off.", tag: 'travel' },
+  { phrase: "You're crossing the line", meaning: "Going too far; behaving unacceptably", example: "You're crossing the line.", tag: 'conflict' },
+  { phrase: "I'm on your side", meaning: "I support you", example: "Don't worry, I'm on your side.", tag: 'emotion' },
+  { phrase: "I'll make it up to you", meaning: "I will compensate for my mistake", example: "I'll make it up to you.", tag: 'emotion' },
+  { phrase: "Make a fool of yourself", meaning: "Embarrass yourself in public", example: "Don't make a fool of yourself.", tag: 'conflict' },
+  { phrase: "At all costs", meaning: "No matter what; by any means necessary", example: "Avoid mistakes at all costs.", tag: 'advice' },
+  { phrase: "Step on it", meaning: "Drive faster; hurry up", example: "Step on it, we're late.", tag: 'travel' },
+  { phrase: "Pull over", meaning: "Stop the vehicle to the side", example: "Pull over here.", tag: 'travel' },
+];
+
+const PATTERNS = [
+  { structure: 'As long as + condition', usage: 'Expresses a requirement or condition for something to happen', examples: ['As long as I study, I will improve.', 'As long as I have time, I\'m happy.'], prompt: 'Write a sentence using "as long as" about your daily routine.' },
+  { structure: "I've run out of + noun", usage: 'Describes having nothing left of something', examples: ["I've run out of money.", "I've run out of time."], prompt: 'What have you recently run out of? Write a sentence.' },
+  { structure: 'On the verge of + noun/verb-ing', usage: 'Very close to doing or experiencing something', examples: ['She is on the verge of crying.', 'He was on the verge of success.'], prompt: 'Describe something you are on the verge of achieving.' },
+  { structure: 'I bet + sentence', usage: 'Express assumption or strong belief', examples: ["I bet it's expensive.", "I bet he's tired."], prompt: 'Make a guess about someone using "I bet".' },
+  { structure: 'Must have + past participle', usage: 'Strong assumption or deduction about the past', examples: ['They must have left already.', 'She must have forgotten.'], prompt: 'Think of a situation and write a deduction using "must have".' },
+  { structure: "I'm about to + verb", usage: 'Something is going to happen very soon', examples: ["I'm about to leave.", "I'm about to call you.", "I'm about to study."], prompt: "What are you about to do right now?" },
+  { structure: "I'd rather + verb", usage: 'Expresses a preference', examples: ["I'd rather stay home.", "I'd rather not answer that."], prompt: "What would you rather do this weekend?" },
+];
+
+const PHRASES = [
+  { phrase: 'Make the most of', meaning: 'Use something to the fullest', example: 'I really want to make the most of my precious time off.' },
+  { phrase: 'Keen to', meaning: 'Want to do something eagerly', example: "I'm keen to learn English." },
+  { phrase: 'Bigger and better than ever', meaning: 'Improved more than before', example: "The team came back bigger and better than ever." },
+  { phrase: 'Road trip', meaning: 'A journey by car, often for fun', example: 'We planned a road trip through Scotland.' },
+];
+
+const SENTENCES = [
+  'I am going to start my journey.',
+  'What strategy do you recommend?',
+  'Technology plays a major role in my everyday life.',
+  'The surroundings feel rural.',
+  'I am worried that I will do poorly on the test.',
+  'Stepping out of my comfort zone was extremely challenging.',
+  'I have been in the UK for a year and a half.',
+  'The cost of living in Manchester is relatively affordable.',
+  'During the ITD course, I learned a lot.',
+  'The weather looks calm / overcast / gloomy / sunny.',
+  'Yesterday, I felt overwhelmed.',
+  'It was a helpful conversation.',
+  'It was my first real project.',
+  'He looks surprised and helpless while the groceries are scattered around him.',
+  'The jars break open, and milk spills everywhere.',
+  'After confirming it is safe, he moves his right foot and tries to stand steadily.',
+];
+
+const CONVOS = [
+  {
+    title: 'Haircut', tag: 'haircut',
+    lines: [
+      { spk: 'A', text: 'Have you had a haircut yet?' },
+      { spk: 'B', text: "Not yet, I'm about to leave." },
+      { spk: 'A', text: 'Are you on your way?' },
+      { spk: 'B', text: "Yes, I'm getting there." },
+      { spk: 'Stylist', text: 'How would you like it?' },
+      { spk: 'B', text: 'Just a little trim on top. Not too short on the sides.' },
+    ],
+    tip: 'Use "just a little" to sound polite and specific when asking for small changes.'
+  },
+  {
+    title: 'Phone Call', tag: 'phone',
+    lines: [
+      { spk: 'A', text: 'Is this a good time to talk?' },
+      { spk: 'B', text: 'Please hold for a moment.' },
+      { spk: 'A', text: 'May I ask who is calling?' },
+      { spk: 'B', text: 'This is [name] speaking.' },
+      { spk: 'A', text: 'Could you please pass it on?' },
+      { spk: 'B', text: 'Yes, of course.' },
+    ],
+    tip: '"May I ask who is calling?" is formal and professional — use it for work calls.'
+  },
+  {
+    title: 'Travel / Hotel', tag: 'travel',
+    lines: [
+      { spk: 'A', text: 'How are you enjoying Scotland so far?' },
+      { spk: 'B', text: "I'm having a great time, thank you." },
+      { spk: 'A', text: 'Where are you visiting from?' },
+      { spk: 'B', text: "I'm visiting from [country]." },
+      { spk: 'A', text: 'Are you staying nearby?' },
+      { spk: 'B', text: 'Yes, I reserved a single room close by.' },
+    ],
+    tip: '"I\'m having a great time" is a natural, friendly response for social conversations.'
+  },
+  {
+    title: 'Restaurant / Ordering', tag: 'restaurant',
+    lines: [
+      { spk: 'A', text: 'What time will you be here?' },
+      { spk: 'B', text: 'I will get there at 10.' },
+      { spk: 'Waiter', text: 'Room temperature, please?' },
+      { spk: 'B', text: 'Yes, room temperature is fine.' },
+      { spk: 'B', text: 'Could you wrap those up for me?' },
+      { spk: 'Waiter', text: 'Of course, no problem.' },
+    ],
+    tip: '"Could you wrap those up?" is the natural phrase for taking leftover food.'
+  },
+  {
+    title: 'Common Q&A', tag: 'questions',
+    lines: [
+      { spk: 'Q', text: 'Could you please hurry?' },
+      { spk: 'A', text: "I'll try." },
+      { spk: 'Q', text: 'Have you managed to try any local food?' },
+      { spk: 'A', text: "Yes, I've tried a few dishes." },
+      { spk: 'Q', text: 'What time will you be here?' },
+      { spk: 'A', text: 'I will get there at 10.' },
+    ],
+    tip: null
+  },
+  {
+    title: 'Directions', tag: 'travel',
+    lines: [
+      { spk: 'A', text: 'Please drop me off here.' },
+      { spk: 'B', text: 'Sure, pulling over now.' },
+      { spk: 'A', text: 'Make a left at the corner, then go straight.' },
+      { spk: 'B', text: 'Got it. Cross the road there?' },
+      { spk: 'A', text: "Yes, the stop is on top of that hill." },
+    ],
+    tip: '"Make a left / right" is common informal English for giving directions.'
+  },
+];
+
+const PREFIXES = [
+  { prefix: 'dis-', meaning: 'Opposite / reverse', rule: 'Used before verbs and adjectives to reverse the meaning.', examples: ['disagree', 'disconnect', 'dishonest', 'disloyal', 'distrust', 'dislike'] },
+  { prefix: 'un-', meaning: 'Simple negative', rule: 'Common prefix for adjectives to make them negative.', examples: ['unhappy', 'unfair', 'unsafe', 'untidy'] },
+  { prefix: 'in-', meaning: 'Not (before most letters)', rule: 'Use in- before most consonants and vowels.', examples: ['incorrect', 'incomplete', 'insecure'] },
+  { prefix: 'im-', meaning: 'Not (before p, b, m)', rule: "Use im- when the root word starts with p, b, or m.", examples: ['impossible', 'impatient', 'immature'] },
+  { prefix: 'il-', meaning: 'Not (before l)', rule: 'Use il- when the root word starts with l.', examples: ['illegal', 'illogical', 'illegible'] },
+  { prefix: 'ir-', meaning: 'Not (before r)', rule: 'Use ir- when the root word starts with r.', examples: ['irregular', 'irresponsible', 'irrelevant'] },
+  { prefix: 'mis-', meaning: 'Wrongly / incorrectly', rule: "Used to say something was done incorrectly.", examples: ['misunderstand', 'misbehave', 'misspell'] },
+  { prefix: 'anti-', meaning: 'Against', rule: 'Expresses opposition to something.', examples: ['antisocial', 'antiwar', 'antibiotic'] },
+  { prefix: 'non-', meaning: 'Neutral "not"', rule: 'More neutral than un-; often used for categories.', examples: ['non-smoker', 'non-verbal', 'nonsense'] },
+  { prefix: 'pre-', meaning: 'Before', rule: 'Comes before something in time or order.', examples: ['preview', 'prepare', 'preschool'] },
+  { prefix: 're-', meaning: 'Again', rule: 'Doing something a second time.', examples: ['rewrite', 'restart', 'review', 'rebuild'] },
+  { prefix: 'sub-', meaning: 'Under / below', rule: 'Beneath or secondary to something.', examples: ['submarine', 'subtitle', 'subway'] },
+  { prefix: 'tele-', meaning: 'Far / at a distance', rule: 'Related to communication or things from a distance.', examples: ['telephone', 'television', 'telescope'] },
+  { prefix: 'auto-', meaning: 'Self', rule: 'Related to the self or working independently.', examples: ['autobiography', 'automatic', 'automobile'] },
+  { prefix: 'bi-', meaning: 'Two', rule: 'Indicates two of something.', examples: ['bilingual', 'bicycle', 'biweekly'] },
+  { prefix: 'ab-', meaning: 'Away from / abnormal', rule: 'Suggests deviation from normal.', examples: ['abnormal', 'abuse', 'absent'] },
+  { prefix: 'dys-', meaning: 'Difficulty / problem', rule: 'Used in medical and technical contexts.', examples: ['dyslexia', 'dyscalculia', 'dysfunctional'] },
+];
+
+const SUFFIXES = [
+  { suffix: '-ion / -tion', function: 'Process or result (noun)', meaning: 'Turns a verb into a noun', examples: ['communication', 'legislation', 'education', 'action'] },
+  { suffix: '-ment', function: 'Process or result (noun)', meaning: 'Turns a verb into a noun', examples: ['development', 'treatment', 'management', 'improvement'] },
+  { suffix: '-er', function: 'Person or agent', meaning: 'Someone who performs an action', examples: ['worker', 'teacher', 'manager', 'trainer'] },
+  { suffix: '-ian', function: 'Person (specialist)', meaning: 'Someone in a particular profession', examples: ['dietician', 'musician', 'politician', 'technician'] },
+  { suffix: '-al', function: 'Adjective', meaning: 'Relating to something', examples: ['emotional', 'social', 'educational', 'professional'] },
+  { suffix: '-ory / -ary', function: 'Adjective', meaning: 'Relating to a function or process', examples: ['statutory', 'discriminatory', 'sensory', 'obligatory'] },
+  { suffix: '-ful', function: 'Quality (adjective)', meaning: 'Full of something', examples: ['respectful', 'careful', 'powerful', 'helpful'] },
+  { suffix: '-less', function: 'Quality (adjective)', meaning: 'Without something', examples: ['careless', 'hopeless', 'worthless', 'helpless'] },
+  { suffix: '-ity', function: 'State or condition (noun)', meaning: 'Quality or state of being', examples: ['equality', 'ability', 'diversity', 'capability'] },
+  { suffix: '-ship', function: 'State or condition (noun)', meaning: 'Position, skill, or relationship', examples: ['leadership', 'partnership', 'friendship', 'membership'] },
+];
+
+const EXAMPLE_SENTENCES = [
+  { group: 'dis- / un- Prefixes', sentences: [
+    { s: 'I disagree with you about that decision.', bold: 'disagree' },
+    { s: 'He disconnected the call without warning.', bold: 'disconnected' },
+    { s: 'This is dishonest behaviour.', bold: 'dishonest' },
+    { s: 'She is unhappy because she lost her phone.', bold: 'unhappy' },
+    { s: 'I dislike working in a disorganized environment.', bold: 'dislike' },
+    { s: 'I distrust myself when things go wrong.', bold: 'distrust' },
+  ]},
+  { group: '-ion / -ment Suffixes', sentences: [
+    { s: 'Good communication is essential between staff and residents.', bold: 'communication' },
+    { s: 'Training supports professional development.', bold: 'development' },
+    { s: 'Staff must follow statutory guidelines and legislation.', bold: 'legislation' },
+    { s: 'The treatment improved her condition significantly.', bold: 'treatment' },
+  ]},
+  { group: '-ful / -less Suffixes', sentences: [
+    { s: 'Staff should be respectful and kind at all times.', bold: 'respectful' },
+    { s: 'Staff must be careful when using equipment.', bold: 'careful' },
+    { s: 'Careless actions can cause serious harm.', bold: 'Careless' },
+    { s: 'Some residents feel hopeless without proper support.', bold: 'hopeless' },
+  ]},
+  { group: '-ity / -ship Suffixes', sentences: [
+    { s: 'Promoting equality creates a fair environment.', bold: 'equality' },
+    { s: 'Good leadership improves team performance.', bold: 'leadership' },
+    { s: 'A strong partnership between teams drives results.', bold: 'partnership' },
+    { s: 'Diversity brings different perspectives to the table.', bold: 'diversity' },
+  ]},
+  { group: 'dys- / mis- Prefixes', sentences: [
+    { s: 'Some residents benefit from sensory activities if they have dyslexia.', bold: 'dyslexia' },
+    { s: 'Dysfunctional systems make care harder to deliver.', bold: 'Dysfunctional' },
+    { s: 'He often misunderstands instructions at work.', bold: 'misunderstands' },
+    { s: 'The child would misbehave when not engaged.', bold: 'misbehave' },
+  ]},
+];
+
+const FLASH_CARDS = [
+  { q: 'water under the bridge', a: 'Something in the past that no longer matters' },
+  { q: 'on the verge of', a: 'Very close to something happening' },
+  { q: 'must have + past participle', a: 'Strong assumption about the past' },
+  { q: 'dis-', a: 'Opposite / reverse (disagree, dishonest)' },
+  { q: '-ful', a: 'Full of something (respectful, careful)' },
+  { q: 'spill the beans', a: 'Reveal a secret' },
+  { q: 'I bet…', a: "I'm sure / I think" },
+  { q: '-ship', a: 'Position or relationship (leadership, partnership)' },
+  { q: 'easier said than done', a: 'Hard to actually do in practice' },
+  { q: 'dys-', a: 'Difficulty or problem (dyslexia, dysfunctional)' },
+  { q: 'I\'d rather + verb', a: 'Expresses a preference' },
+  { q: 'omniscient', a: 'Knowing everything' },
+];
+
+// ── RENDER FUNCTIONS ──────────────────────────────────────────────
+
+function tagClass(t) {
+  const map = { formal:'tag-blue', daily:'tag-teal', describing:'tag-amber', travel:'tag-green', advice:'tag-teal', emotion:'tag-amber', conflict:'tag-red', reaction:'tag-slate', daily_life:'tag-teal', argument:'tag-red' };
+  return map[t] || 'tag-slate';
+}
+
+function renderVocab(list) {
+  const g = document.getElementById('vocab-grid');
+  g.innerHTML = list.map(v => `
+    <div class="card vocab-card" data-tag="${v.tag}">
+      <div class="word">${v.word}</div>
+      <div class="meaning">${v.meaning}</div>
+      ${v.example ? `<div class="example">${v.example}</div>` : ''}
+      <div class="card-foot">
+        <span class="tag ${tagClass(v.tag)}">${v.tag}</span>
+        <button class="fav-btn" onclick="toggleFav(this)" title="Save">♡</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderIdioms(list) {
+  const g = document.getElementById('idioms-grid');
+  g.innerHTML = list.map(i => `
+    <div class="card idiom-card" data-tag="${i.tag}">
+      <div class="phrase">${i.phrase}</div>
+      <div class="meaning">${i.meaning}</div>
+      <div class="example">${i.example}</div>
+      <div><span class="tag ${tagClass(i.tag)}">${i.tag}</span></div>
+    </div>`).join('');
+}
+
+function renderPatterns() {
+  document.getElementById('patterns-grid').innerHTML = PATTERNS.map(p => `
+    <div class="card pattern-card">
+      <div class="structure">${p.structure}</div>
+      <div class="usage">${p.usage}</div>
+      <ul class="example-list">${p.examples.map(e=>`<li>${e}</li>`).join('')}</ul>
+      <div class="practice-prompt"><strong>✏️ Practice:</strong>${p.prompt}</div>
+    </div>`).join('');
+}
+
+function renderPhrases() {
+  document.getElementById('phrases-grid').innerHTML = PHRASES.map(p => `
+    <div class="card">
+      <div style="font-family:'Poppins',sans-serif;font-size:17px;font-weight:700;margin-bottom:6px;color:var(--teal)">${p.phrase}</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:10px">${p.meaning}</div>
+      <div style="font-size:13px;font-style:italic;background:var(--teal-soft);border-radius:8px;padding:8px 12px">${p.example}</div>
+    </div>`).join('');
+}
+
+function renderSentences() {
+  document.getElementById('sentences-list').innerHTML = SENTENCES.map(s => `<div class="sent">${s}</div>`).join('');
+}
+
+function renderConvos(list) {
+  document.getElementById('convo-grid').innerHTML = list.map(c => `
+    <div class="card convo-card" data-tag="${c.tag}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <h3 style="margin:0">${c.title}</h3>
+        <span class="tag tag-blue">${c.tag}</span>
+      </div>
+      ${c.lines.map((l,i)=>`
+        <div class="dialogue-line">
+          <span class="dlg-speaker ${i%2===1?'b':''}">${l.spk}</span>
+          <span class="dlg-text">${l.text}</span>
+        </div>`).join('')}
+      ${c.tip ? `<div class="speaking-tip"><strong>💡 Tip:</strong> ${c.tip}</div>` : ''}
+    </div>`).join('');
+}
+
+function renderPrefixes() {
+  document.getElementById('prefixes-grid').innerHTML = PREFIXES.map(p => `
+    <div class="card prefix-card">
+      <h3>${p.prefix}</h3>
+      <div class="meaning-label">${p.meaning}</div>
+      <div class="rule-note">${p.rule}</div>
+      <div class="prefix-examples">${p.examples.map(e=>`<span class="prefix-example-pill">${e}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+function renderSuffixes() {
+  document.getElementById('suffixes-grid').innerHTML = SUFFIXES.map(s => `
+    <div class="card suffix-card">
+      <h3>${s.suffix}</h3>
+      <div class="meaning-label" style="color:var(--teal)">${s.function}</div>
+      <div class="rule-note">${s.meaning}</div>
+      <div class="suffix-examples" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">${s.examples.map(e=>`<span class="suffix-pill">${e}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+function renderExamples() {
+  document.getElementById('examples-content').innerHTML = EXAMPLE_SENTENCES.map(g => `
+    <div class="eg-group-title">${g.group}</div>
+    ${g.sentences.map(s => {
+      const highlighted = s.s.replace(new RegExp('\\b' + s.bold + '\\b', 'i'), m => `<span class="highlighted">${m}</span>`);
+      return `<div class="eg-sentence">${highlighted}</div>`;
+    }).join('')}`).join('');
+}
+
+function renderFlash() {
+  document.getElementById('flash-grid').innerHTML = FLASH_CARDS.map(f => `
+    <div class="flash-card" onclick="this.classList.toggle('revealed')">
+      <div class="flash-q">${f.q}</div>
+      <div class="flash-a">${f.a}</div>
+      <div class="flash-hint">Click to reveal</div>
+    </div>`).join('');
+}
+
+// ── INTERACTIONS ──────────────────────────────────────────────────
+
+function showPage(id, clickedEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const matching = [...document.querySelectorAll('.nav-item')].find(n => n.textContent.trim().toLowerCase().includes(id === 'dashboard' ? 'dashboard' : id));
+  if (matching) matching.classList.add('active');
+
+  const titles = { dashboard: 'Dashboard', vocabulary: 'Vocabulary', idioms: 'Idioms & Expressions', sentences: 'Sentences & Writing', conversations: 'Conversations', prefixes: 'Prefixes & Suffixes', review: 'Review Hub' };
+  document.getElementById('topbar-title').textContent = titles[id] || id;
+
+  closeSidebar();
+
+  // Scroll to top
+  window.scrollTo(0, 0);
+}
+
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function toggleAcc(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function toggleFav(btn) { btn.classList.toggle('active'); btn.textContent = btn.classList.contains('active') ? '♥' : '♡'; }
+
+function filterVocab(tag, btn) {
+  document.querySelectorAll('#vocab-filters .filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('#vocab-grid .card');
+  cards.forEach(c => c.style.display = (tag === 'all' || c.dataset.tag === tag) ? '' : 'none');
+}
+
+function filterIdioms(tag, btn) {
+  document.querySelectorAll('#page-idioms .filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#idioms-grid .card').forEach(c => c.style.display = (tag === 'all' || c.dataset.tag === tag) ? '' : 'none');
+}
+
+function filterConvo(tag, btn) {
+  document.querySelectorAll('#page-conversations .filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#convo-grid .card').forEach(c => c.style.display = (tag === 'all' || c.dataset.tag === tag) ? '' : 'none');
+}
+
+function searchVocab(q) {
+  const lq = q.toLowerCase();
+  document.querySelectorAll('#vocab-grid .card').forEach(c => {
+    const text = c.textContent.toLowerCase();
+    c.style.display = text.includes(lq) ? '' : 'none';
+  });
+}
+
+function searchIdioms(q) {
+  const lq = q.toLowerCase();
+  document.querySelectorAll('#idioms-grid .card').forEach(c => {
+    c.style.display = c.textContent.toLowerCase().includes(lq) ? '' : 'none';
+  });
+}
+
+function handleGlobalSearch(q) {
+  if (!q) return;
+  // Just navigate to vocabulary and filter
+  showPage('vocabulary', null);
+  document.getElementById('vocab-grid').querySelectorAll('.card').forEach(c => {
+    c.style.display = c.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function toggleDark() { document.body.classList.toggle('dark'); }
+
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+renderVocab(VOCAB);
+renderIdioms(IDIOMS);
+renderPatterns();
+renderPhrases();
+renderSentences();
+renderConvos(CONVOS);
+renderPrefixes();
+renderSuffixes();
+renderExamples();
+renderFlash();
+</script>
+</body>
+</html>
